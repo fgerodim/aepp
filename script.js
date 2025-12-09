@@ -19,50 +19,79 @@ const questions = [
 ];
 
 let currentQuestionIndex = 0;
-let isAnswered = false; // Εάν έχει απαντηθεί η τρέχουσα ερώτηση
+let isAnswered = false; 
+let score = 0; 
+
+// Αντιστοίχιση στοιχείων HTML
 const questionText = document.getElementById('question-text');
 const trueBtn = document.getElementById('true-btn');
 const falseBtn = document.getElementById('false-btn');
 const feedbackText = document.getElementById('feedback-text');
 const nextBtn = document.getElementById('next-btn');
 const buttonsContainer = document.getElementById('buttons-container');
+const scoreText = document.getElementById('score-text'); 
+
+// Συνάρτηση για την ενημέρωση της εμφάνισης του σκορ
+function updateScoreDisplay() {
+    // Ο συνολικός αριθμός απαντημένων ερωτήσεων είναι ο δείκτης (index) της τρέχουσας ερώτησης.
+    // Εάν δεν έχει απαντηθεί η τρέχουσα ερώτηση, ο παρονομαστής είναι ο τρέχων δείκτης.
+    // Εάν έχει απαντηθεί, ο παρονομαστής είναι ο δείκτης + 1.
+    
+    // Αριθμός απαντημένων ερωτήσεων:
+    const answeredCount = isAnswered ? currentQuestionIndex + 1 : currentQuestionIndex; 
+    
+    // Εμφάνιση του τρέχοντος σκορ / απαντημένος αριθμός ερωτήσεων
+    // Χρησιμοποιούμε Math.max(1, answeredCount) για να αποφύγουμε εμφάνιση "Σκορ: 0 / 0" στην αρχή
+    scoreText.textContent = `Σκορ: ${score} / ${Math.max(1, answeredCount)}`; 
+    
+    // ΔΙΟΡΘΩΣΗ: Για την πρώτη ερώτηση, δείχνουμε 0/0.
+    if (currentQuestionIndex === 0 && !isAnswered) {
+        scoreText.textContent = `Σκορ: 0 / 0`;
+    }
+}
 
 // Συνάρτηση για την εμφάνιση της επόμενης ερώτησης
 function loadQuestion() {
     isAnswered = false;
     feedbackText.textContent = '';
-    nextBtn.style.display = 'none'; // Κρύψε το κουμπί "Επόμενη"
-    buttonsContainer.style.pointerEvents = 'auto'; // Ενεργοποίησε τα κουμπιά
-    feedbackText.classList.remove('correct', 'incorrect'); // Καθάρισε τα στυλ
+    nextBtn.style.display = 'none'; 
+    buttonsContainer.style.pointerEvents = 'auto'; 
+    feedbackText.classList.remove('correct', 'incorrect'); 
 
     if (currentQuestionIndex < questions.length) {
         questionText.textContent = questions[currentQuestionIndex].question;
     } else {
-        // Τέλος του κουίζ
-        questionText.textContent = "✅ Το κουίζ ολοκληρώθηκε! Μπράβο!";
+        // Τέλος του κουίζ - εμφάνιση τελικού σκορ
+        questionText.textContent = `✅ Το κουίζ ολοκληρώθηκε! Το τελικό σου σκορ είναι: ${score} / ${questions.length}`; 
         buttonsContainer.style.display = 'none';
+        nextBtn.style.display = 'none'; 
     }
+    
+    // Ενημερώνουμε το σκορ, αλλά ο παρονομαστής θα είναι ο τρέχων δείκτης (γιατί δεν έχουμε απαντήσει ακόμα).
+    updateScoreDisplay(); 
 }
 
 // Συνάρτηση για τον έλεγχο της απάντησης
 function checkAnswer(userAnswer) {
-    if (isAnswered) return; // Μην επιτρέπεις δεύτερη απάντηση
+    if (isAnswered) return; 
 
     isAnswered = true;
     const correctAnswer = questions[currentQuestionIndex].answer;
     
-    // Απενεργοποίησε τα κουμπιά απάντησης
     buttonsContainer.style.pointerEvents = 'none'; 
 
     if (userAnswer === correctAnswer) {
         feedbackText.textContent = '✅ Σωστό! Μπράβο.';
         feedbackText.classList.add('correct');
+        score++; 
     } else {
         feedbackText.textContent = '❌ Λάθος. Δοκίμασε την επόμενη!';
         feedbackText.classList.add('incorrect');
     }
 
-    nextBtn.style.display = 'block'; // Εμφάνισε το κουμπί "Επόμενη"
+    // Τώρα που απαντήθηκε η ερώτηση, ενημερώνουμε το σκορ.
+    updateScoreDisplay(); 
+    nextBtn.style.display = 'block'; 
 }
 
 // Χειριστές Γεγονότων (Event Listeners)
@@ -70,8 +99,8 @@ trueBtn.addEventListener('click', () => checkAnswer(true));
 falseBtn.addEventListener('click', () => checkAnswer(false));
 
 nextBtn.addEventListener('click', () => {
-    currentQuestionIndex++; // Πήγαινε στην επόμενη ερώτηση
-    loadQuestion(); // Φόρτωσε τη νέα ερώτηση
+    currentQuestionIndex++; 
+    loadQuestion(); 
 });
 
 // Εκκίνηση του κουίζ
