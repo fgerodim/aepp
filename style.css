@@ -1,0 +1,74 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background-color: #f4f4f9; /* Απαλό φόντο */
+}
+
+#quiz-container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
+}
+
+#question-text {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    color: #333;
+    min-height: 50px; /* Για να μην μετακινείται η διάταξη */
+}
+
+#buttons-container button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 1em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#true-btn {
+    background-color: #4CAF50; /* Πράσινο για το Σωστό */
+    color: white;
+}
+
+#false-btn {
+    background-color: #f44336; /* Κόκκινο για το Λάθος */
+    color: white;
+}
+
+#true-btn:hover { background-color: #45a049; }
+#false-btn:hover { background-color: #da342a; }
+
+#feedback-text {
+    margin-top: 15px;
+    font-weight: bold;
+    min-height: 20px; /* Για σταθερή διάταξη */
+}
+
+#next-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Προσθέστε εδώ στυλ για σωστή/λανθασμένη απάντηση */
+.correct {
+    color: #4CAF50;
+}
+
+.incorrect {
+    color: #f44336;
+}
