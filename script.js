@@ -7,11 +7,14 @@ const nextBtn = document.getElementById('next-btn');
 const buttonsContainer = document.getElementById('buttons-container');
 const scoreText = document.getElementById('score-text');
 
+
 let questions = []; // Εδώ θα αποθηκευτούν οι τυχαίες ερωτήσεις
 let currentQuestionIndex = 0;
 let isAnswered = false;
 let score = 0;
-const NUMBER_OF_QUIZ_QUESTIONS = 10; // Ο αριθμός των ερωτήσεων που θέλουμε
+let answersLog = []; // Καταγράφει τις απαντήσεις, το σωστό/λάθος και την ερώτηση.
+
+const NUMBER_OF_QUIZ_QUESTIONS = 4; // Ο αριθμός των ερωτήσεων που θέλουμε
 
 // --- ΛΟΓΙΚΗ ΦΟΡΤΩΣΗΣ ΚΑΙ ΤΥΧΑΙΑΣ ΕΠΙΛΟΓΗΣ ---
 
@@ -53,6 +56,7 @@ async function fetchAndSetupQuiz() {
     score = 0;
     isAnswered = false;
     questions = [];
+    answersLog = []; // 📝 ΝΕΟ: Καθαρίζουμε το log σε κάθε νέα έναρξη
     
     // Επαναφορά εμφάνισης κουμπιών / κειμένων
     buttonsContainer.style.display = 'flex'; // Εμφάνιση του container απαντήσεων
@@ -60,6 +64,7 @@ async function fetchAndSetupQuiz() {
     nextBtn.textContent = 'Επόμενη Ερώτηση '; // Επαναφορά του κειμένου του κουμπιού
     feedbackText.textContent = '';
     questionText.textContent = "Φόρτωση ερωτήσεων... παρακαλώ περιμένετε.";
+    feedbackText.classList.remove('correct', 'incorrect', 'streak-bonus'); // Καθαρισμός κλάσεων
 
     try {
         const response = await fetch('quiz_data.csv');
@@ -124,12 +129,11 @@ function loadQuestion() {
     nextBtn.style.display = 'none'; 
     buttonsContainer.style.pointerEvents = 'auto'; 
     feedbackText.classList.remove('correct', 'incorrect'); 
-    // 🌟 ΝΕΟ: Αφαίρεση της κλάσης 'selected' από όλα τα κουμπιά
+    
     trueBtn.classList.remove('selected');
     falseBtn.classList.remove('selected');
     
-
-    // 🛑 ΝΕΟ: Κρύβουμε το footer σε κάθε νέα ερώτηση
+    // 🛑 Κρύβουμε το footer σε κάθε νέα ερώτηση
     document.getElementById('app-footer').style.display = 'none';
     // Επαναφορά κειμένου κουμπιού σε "Επόμενη Ερώτηση"
     nextBtn.textContent = 'Επόμενη Ερώτηση '; 
@@ -139,15 +143,48 @@ function loadQuestion() {
         buttonsContainer.style.display = 'flex'; // Βεβαιωνόμαστε ότι εμφανίζονται
 
     } else {
-        // 🏁 Τέλος του κουίζ
+        // 🏁 Τέλος του κουίζ - Εμφάνιση Αναλυτικού Report
         
-        // 🌟 Υπολογισμός Κατάταξης
-        const rank = getRank(score, questions.length);
-        
-        // Εμφάνιση τελικού μηνύματος με την κατάταξη
-        
-        questionText.textContent = `✅ Το κουίζ ολοκληρώθηκε!\nΤελικό Σκορ: ${score/questions.length*100} %\nΚατάταξη: ${rank.emoji} ${rank.title}`; 
         buttonsContainer.style.display = 'none';
+        
+        const totalQuestions = questions.length;
+        const rank = getRank(score, totalQuestions);
+        
+        // 1. Τίτλος & Σκορ
+        questionText.textContent = `Η κατάταξή σου είναι: ${rank.emoji} ${rank.title}`;
+        
+        // Καθαρισμός feedbackText από προηγούμενα στυλ
+        feedbackText.classList.remove('correct', 'incorrect');
+        
+        let reportHTML = `
+            <h2>Συνοπτικό Σκορ: ${score/totalQuestions*100}%</h2>
+            <hr>
+            <h4>Αναλυτική Επισκόπηση Απαντήσεων:</h4>
+            <ul class="report-list">
+        `;
+
+        // 2. Δημιουργία της λίστας Report από το answersLog
+        answersLog.forEach((logItem, index) => {
+            const statusClass = logItem.isCorrect ? 'report-correct' : 'report-incorrect';
+            const userAnswerText = logItem.userAnswer ? 'Σωστό' : 'Λάθος';
+            const correctText = logItem.correct ? 'Σωστό' : 'Λάθος';
+
+            reportHTML += `
+                <li class="${statusClass}">
+                    Ερώτηση ${index + 1}: ${logItem.question}<br>
+                    ${logItem.isCorrect 
+                        ? `✅ Απάντησες **Σωστά**!` 
+                        : `❌ Απάντησες: **${userAnswerText}** | Η Απάντηση είναι: **${correctText}**`}
+                </li>
+            `;
+        });
+
+        reportHTML += '</ul>';
+
+        feedbackText.innerHTML = reportHTML; // Εμφάνιση του Report
+
+        // Επαναφορά του Log για νέο παιχνίδι
+        answersLog = []; 
         
         // 🌟 ΝΕΟ: Εμφάνιση του footer όταν ολοκληρώνεται το κουίζ
         document.getElementById('app-footer').style.display = 'block';
@@ -165,20 +202,35 @@ function checkAnswer(userAnswer) {
     if (isAnswered) return; 
 
     isAnswered = true;
-    const correctAnswer = questions[currentQuestionIndex].answer;
+    
+    // 💡 ΔΙΟΡΘΩΣΗ: Ορισμός μεταβλητών για το log
+    const currentQuestion = questions[currentQuestionIndex]; 
+    const correctAnswer = currentQuestion.answer;
+    const isCorrect = userAnswer === correctAnswer;
     
     buttonsContainer.style.pointerEvents = 'none'; 
-    // 🌟 ΝΕΟ: Εύρεση και επισήμανση του επιλεγμένου κουμπιού
+    
+    // Εύρεση και επισήμανση του επιλεγμένου κουμπιού
     const selectedButton = userAnswer ? trueBtn : falseBtn;
-    selectedButton.classList.add('selected'); // Προσθήκη της κλάσης .selected
+    selectedButton.classList.add('selected'); 
 
-    if (userAnswer === correctAnswer) {
+    // 📝 Καταγραφή της απάντησης στο log
+    answersLog.push({
+        question: currentQuestion.question,
+        correct: correctAnswer,
+        userAnswer: userAnswer,
+        isCorrect: isCorrect
+    });
+    
+    if (isCorrect) {
         feedbackText.textContent = '✅ Μπράβο!';
         feedbackText.classList.add('correct');
         score++; 
+        
     } else {
         feedbackText.textContent = '❌ Δοκίμασε την επόμενη!';
         feedbackText.classList.add('incorrect');
+        
     }
 
     updateScoreDisplay(); 
