@@ -32,6 +32,17 @@ h1 {
     min-height: 50px; 
     font-weight: 500;
 }
+#buttons-container {
+    /* 🌟 ΝΕΟ: Ενεργοποίηση Flexbox */
+    display: flex;
+    /* 🌟 ΝΕΟ: Κεντράρισμα των στοιχείων οριζόντια */
+    justify-content: center;
+    /* 🌟 ΝΕΟ: Προσθήκη κενού μεταξύ των κουμπιών (προαιρετικό) */
+    gap: 20px; 
+    
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
 
 /* Κουμπιά Απάντησης (Σωστό/Λάθος) */
 #buttons-container button {
@@ -43,7 +54,7 @@ h1 {
     cursor: pointer;
     transition: background-color 0.3s;
     font-weight: bold;
-    min-width: 120px;
+    min-width: 150px;
 }
 
 #true-btn {
@@ -119,4 +130,28 @@ h1 {
     transform: scale(0.98); /* Ελαφριά σμίκρυνση */
     box-shadow: none; /* Αφαίρεση σκιάς */
     border: 3px solid #333; /* Προσθήκη ενός περιγράμματος */
+}
+#app-footer {
+    display: none; /* 🛑 ΝΕΟ: Κρύβει το footer στην αρχή */
+    
+    margin-top: 40px; 
+    padding-top: 15px;
+    border-top: 1px solid #ccc; 
+    font-size: 0.85em;
+    color: #666;
+    text-align: center;
+}
+
+#app-footer p {
+    margin: 5px 0;
+}
+
+#app-footer a {
+    color: #007bff; 
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#app-footer a:hover {
+    text-decoration: underline; 
 }

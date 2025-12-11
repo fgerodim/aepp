@@ -128,6 +128,9 @@ function loadQuestion() {
     trueBtn.classList.remove('selected');
     falseBtn.classList.remove('selected');
     
+
+    // 🛑 ΝΕΟ: Κρύβουμε το footer σε κάθε νέα ερώτηση
+    document.getElementById('app-footer').style.display = 'none';
     // Επαναφορά κειμένου κουμπιού σε "Επόμενη Ερώτηση"
     nextBtn.textContent = 'Επόμενη Ερώτηση '; 
     
@@ -146,6 +149,9 @@ function loadQuestion() {
         questionText.textContent = `✅ Το κουίζ ολοκληρώθηκε!\nΤελικό Σκορ: ${score/questions.length*100} %\nΚατάταξη: ${rank.emoji} ${rank.title}`; 
         buttonsContainer.style.display = 'none';
         
+        // 🌟 ΝΕΟ: Εμφάνιση του footer όταν ολοκληρώνεται το κουίζ
+        document.getElementById('app-footer').style.display = 'block';
+
         // Εμφάνιση κουμπιού επανέναρξης και αλλαγή κειμένου
         nextBtn.style.display = 'block'; 
         nextBtn.textContent = 'Επανέναρξη 🔄'; 
