@@ -11,7 +11,7 @@ let questions = []; // Εδώ θα αποθηκευτούν οι τυχαίες 
 let currentQuestionIndex = 0;
 let isAnswered = false;
 let score = 0;
-const NUMBER_OF_QUIZ_QUESTIONS = 4; // Ο αριθμός των ερωτήσεων που θέλουμε
+const NUMBER_OF_QUIZ_QUESTIONS = 10; // Ο αριθμός των ερωτήσεων που θέλουμε
 
 // --- ΛΟΓΙΚΗ ΦΟΡΤΩΣΗΣ ΚΑΙ ΤΥΧΑΙΑΣ ΕΠΙΛΟΓΗΣ ---
 
