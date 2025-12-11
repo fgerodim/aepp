@@ -124,6 +124,9 @@ function loadQuestion() {
     nextBtn.style.display = 'none'; 
     buttonsContainer.style.pointerEvents = 'auto'; 
     feedbackText.classList.remove('correct', 'incorrect'); 
+    // 🌟 ΝΕΟ: Αφαίρεση της κλάσης 'selected' από όλα τα κουμπιά
+    trueBtn.classList.remove('selected');
+    falseBtn.classList.remove('selected');
     
     // Επαναφορά κειμένου κουμπιού σε "Επόμενη Ερώτηση"
     nextBtn.textContent = 'Επόμενη Ερώτηση '; 
@@ -158,6 +161,9 @@ function checkAnswer(userAnswer) {
     const correctAnswer = questions[currentQuestionIndex].answer;
     
     buttonsContainer.style.pointerEvents = 'none'; 
+    // 🌟 ΝΕΟ: Εύρεση και επισήμανση του επιλεγμένου κουμπιού
+    const selectedButton = userAnswer ? trueBtn : falseBtn;
+    selectedButton.classList.add('selected'); // Προσθήκη της κλάσης .selected
 
     if (userAnswer === correctAnswer) {
         feedbackText.textContent = '✅ Μπράβο!';
