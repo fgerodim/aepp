@@ -142,7 +142,8 @@ function loadQuestion() {
         const rank = getRank(score, questions.length);
         
         // Εμφάνιση τελικού μηνύματος με την κατάταξη
-        questionText.textContent = `✅ Το κουίζ ολοκληρώθηκε!\nΤελικό Σκορ: ${score} / ${questions.length}\nΚατάταξη: ${rank.emoji} ${rank.title}`; 
+        
+        questionText.textContent = `✅ Το κουίζ ολοκληρώθηκε!\nΤελικό Σκορ: ${score/questions.length*100} %\nΚατάταξη: ${rank.emoji} ${rank.title}`; 
         buttonsContainer.style.display = 'none';
         
         // Εμφάνιση κουμπιού επανέναρξης και αλλαγή κειμένου
