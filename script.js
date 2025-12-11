@@ -14,7 +14,7 @@ let isAnswered = false;
 let score = 0;
 let answersLog = []; // Καταγράφει τις απαντήσεις, το σωστό/λάθος και την ερώτηση.
 
-const NUMBER_OF_QUIZ_QUESTIONS = 4; // Ο αριθμός των ερωτήσεων που θέλουμε
+const NUMBER_OF_QUIZ_QUESTIONS = 10; // Ο αριθμός των ερωτήσεων που θέλουμε
 
 // --- ΛΟΓΙΚΗ ΦΟΡΤΩΣΗΣ ΚΑΙ ΤΥΧΑΙΑΣ ΕΠΙΛΟΓΗΣ ---
 
