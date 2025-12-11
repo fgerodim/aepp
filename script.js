@@ -42,7 +42,7 @@ function getRank(score, total) {
     } else if (percentage >= 40) {
         return { title: 'Χρειάζεται Μελέτη', emoji: '📚' };
     } else {
-        return { title: 'Κακός Μαθητής', emoji: '🤕' };
+        return { title: 'Αδιάβαστος!', emoji: '🤕' };
     }
 }
 
