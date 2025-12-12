@@ -22,6 +22,63 @@ let score = 0;
 let answersLog = []; // Καταγράφει τις απαντήσεις, το σωστό/λάθος και την ερώτηση.
 
 const NUMBER_OF_QUIZ_QUESTIONS = 10; // Ο αριθμός των ερωτήσεων που θέλουμε
+// --- WebAudio setup για μικρά sounds (pling / buzz) ---
+let audioCtx = null; // θα δημιουργηθεί στην πρώτη αλληλεπίδραση
+
+function ensureAudioContext() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+}
+
+// "Pling" για σωστή απάντηση — δύο σύντομοι τόνοι
+function playPling() {
+    ensureAudioContext();
+    const now = audioCtx.currentTime;
+
+    const osc1 = audioCtx.createOscillator();
+    const gain1 = audioCtx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(900, now);
+    gain1.gain.setValueAtTime(0, now);
+    gain1.gain.linearRampToValueAtTime(0.12, now + 0.005);
+    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+    osc1.connect(gain1).connect(audioCtx.destination);
+    osc1.start(now);
+    osc1.stop(now + 0.12);
+
+    // δεύτερος τόνος, μικρότερο delay
+    const osc2 = audioCtx.createOscillator();
+    const gain2 = audioCtx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(1200, now + 0.06);
+    gain2.gain.setValueAtTime(0, now + 0.06);
+    gain2.gain.linearRampToValueAtTime(0.08, now + 0.065);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+    osc2.connect(gain2).connect(audioCtx.destination);
+    osc2.start(now + 0.06);
+    osc2.stop(now + 0.18);
+}
+
+// "Buzz" για λάθος — σύντομος, χαμηλός τόνος με γρήγορη κόκκινη ριπή
+function playBuzz() {
+    ensureAudioContext();
+    const now = audioCtx.currentTime;
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(120, now);
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.12, now + 0.005);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+
+    // μικρή παραμόρφωση (τύπου "τραχύτητας") με αντίσταση (wave shaping) optional
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 0.18);
+}
+
 
 // --- ΛΟΓΙΚΗ ΦΟΡΤΩΣΗΣ ΚΑΙ ΤΥΧΑΙΑΣ ΕΠΙΛΟΓΗΣ ---
 
@@ -231,10 +288,20 @@ function checkAnswer(userAnswer) {
         feedbackText.textContent = '✅ Μπράβο!';
         feedbackText.classList.add('correct');
         score++; 
+        playPling();
+        // προσθέτουμε την κλάση flash στο container
+        const container = document.getElementById('quiz-container');
+        container.classList.add('flash-correct');
+        // αφαίρεση μετά 200ms (ασφαλές fallback)
+        setTimeout(() => container.classList.remove('flash-correct'), 300);
         
     } else {
         feedbackText.textContent = '❌ Δοκίμασε την επόμενη!';
         feedbackText.classList.add('incorrect');
+        playBuzz();
+        const container = document.getElementById('quiz-container');
+        container.classList.add('flash-incorrect');
+        setTimeout(() => container.classList.remove('flash-incorrect'), 300);
         
     }
 
