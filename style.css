@@ -282,10 +282,10 @@ h1 {
 }
 /* Flash effect για σωστό / λάθος (θα εφαρμοστεί στο #quiz-container) */
 #quiz-container.flash-correct {
-    animation: flash-correct 300ms ease-in-out;
+    animation: flash-correct 600ms ease-in-out;
 }
 #quiz-container.flash-incorrect {
-    animation: flash-incorrect 300ms ease-in-out;
+    animation: flash-incorrect 600ms ease-in-out;
 }
 
 /* Ορίζουμε τα keyframes ώστε να μην αλλοιώνεται μόνιμα το background */

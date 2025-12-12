@@ -293,7 +293,7 @@ function checkAnswer(userAnswer) {
         const container = document.getElementById('quiz-container');
         container.classList.add('flash-correct');
         // αφαίρεση μετά 200ms (ασφαλές fallback)
-        setTimeout(() => container.classList.remove('flash-correct'), 300);
+        setTimeout(() => container.classList.remove('flash-correct'), 600);
         
     } else {
         feedbackText.textContent = '❌ Δοκίμασε την επόμενη!';
@@ -301,7 +301,7 @@ function checkAnswer(userAnswer) {
         playBuzz();
         const container = document.getElementById('quiz-container');
         container.classList.add('flash-incorrect');
-        setTimeout(() => container.classList.remove('flash-incorrect'), 300);
+        setTimeout(() => container.classList.remove('flash-incorrect'), 600);
         
     }
 
