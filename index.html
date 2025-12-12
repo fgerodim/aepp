@@ -8,18 +8,29 @@
 </head>
 <body>
     <div id="quiz-container">
-        <h1>❓ Ερωτήσεις τύπου Σωστό/Λάθος</h1>
-        <p id="score-text">Σκορ: 0 / 0</p>
-        <p id="question-text">Φόρτωση ερωτήσεων... παρακαλώ περιμένετε.</p>
-       
-        <div id="buttons-container">
-            <button id="true-btn">Σωστό</button>
-            <button id="false-btn">Λάθος</button>
+        
+        <div id="splash-screen">
+            <h1>Quiz Πληροφορικής: Σωστό/Λάθος</h1>
+            <p><strong>Δοκίμασε τις γνώσεις σου!</strong></p>
+            <p>Αυτό το κουίζ περιέχει 10 τυχαίες ερωτήσεις από τις βασικές έννοιες της Πληροφορικής και του Προγραμματισμού (Αλγόριθμοι, Δομές Δεδομένων, ΓΛΩΣΣΑ).</p>
+            <button id="start-btn" class="main-btn">🚀 Έναρξη</button>
+            <button id="exit-btn" class="main-btn">❌ Έξοδος</button>
         </div>
 
-        <p id="feedback-text"></p>
-        <button id="next-btn" style="display: none;">Επόμενη Ερώτηση </button>
+        <div id="quiz-content" style="display:none;">
+            <h1>❓ Ερωτήσεις τύπου Σωστό/Λάθος</h1>
+            <p id="score-text">Σκορ: 0 / 0</p>
+            <p id="question-text">Φόρτωση ερωτήσεων... παρακαλώ περιμένετε.</p>
+           
+            <div id="buttons-container">
+                <button id="true-btn">Σωστό</button>
+                <button id="false-btn">Λάθος</button>
+            </div>
 
+            <p id="feedback-text"></p>
+            <button id="next-btn" style="display: none;">Επόμενη Ερώτηση </button>
+        </div>
+        
         <footer id="app-footer">
             <p>Δημιουργός: Φάνης Γεροδήμος-ΠΕ86</p>
             <p>Επικοινωνία: <a href="mailto:fgerodim@gmail.com">fgerodim@gmail.com</a></p>

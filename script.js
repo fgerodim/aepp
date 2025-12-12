@@ -7,6 +7,12 @@ const nextBtn = document.getElementById('next-btn');
 const buttonsContainer = document.getElementById('buttons-container');
 const scoreText = document.getElementById('score-text');
 
+// ΣΤΑΘΕΡΕΣ ΓΙΑ ΤΗΝ ΑΡΧΙΚΗ ΣΕΛΙΔΑ
+const splashScreen = document.getElementById('splash-screen');
+const quizContent = document.getElementById('quiz-content');
+const startBtn = document.getElementById('start-btn');
+const exitBtn = document.getElementById('exit-btn');
+
 
 let questions = []; // Εδώ θα αποθηκευτούν οι τυχαίες ερωτήσεις
 let currentQuestionIndex = 0;
@@ -27,15 +33,12 @@ function shuffleArray(array) {
     return array;
 }
 
-// 🌟 ΝΕΟ: Συνάρτηση για τον υπολογισμό της κατάταξης με βάση το σκορ
+// Συνάρτηση για τον υπολογισμό της κατάταξης με βάση το σκορ
 function getRank(score, total) {
-    // Βρίσκουμε το ποσοστό επιτυχίας
     const percentage = (score / total) * 100;
     
-    // Εάν δεν υπάρχουν ερωτήσεις
     if (total === 0) return { title: 'Χωρίς Κατάταξη', emoji: '❓' };
     
-    // Κατηγορίες Κατάταξης
     if (percentage === 100) {
         return { title: 'Φυτό! 🧠', emoji: '🏆' };
     } else if (percentage >= 80) {
@@ -51,20 +54,20 @@ function getRank(score, total) {
 
 // 2. Συνάρτηση για τη φόρτωση των ερωτήσεων από το CSV
 async function fetchAndSetupQuiz() {
-    // Επαναφορά όλων των μεταβλητών και εμφάνισης πριν ξεκινήσει το νέο κουίζ
+    // Επαναφορά όλων των μεταβλητών
     currentQuestionIndex = 0;
     score = 0;
     isAnswered = false;
     questions = [];
-    answersLog = []; // 📝 ΝΕΟ: Καθαρίζουμε το log σε κάθε νέα έναρξη
+    answersLog = []; 
     
     // Επαναφορά εμφάνισης κουμπιών / κειμένων
-    buttonsContainer.style.display = 'flex'; // Εμφάνιση του container απαντήσεων
+    buttonsContainer.style.display = 'flex'; 
     nextBtn.style.display = 'none';
-    nextBtn.textContent = 'Επόμενη Ερώτηση '; // Επαναφορά του κειμένου του κουμπιού
+    nextBtn.textContent = 'Επόμενη Ερώτηση '; 
     feedbackText.textContent = '';
     questionText.textContent = "Φόρτωση ερωτήσεων... παρακαλώ περιμένετε.";
-    feedbackText.classList.remove('correct', 'incorrect', 'streak-bonus'); // Καθαρισμός κλάσεων
+    feedbackText.classList.remove('correct', 'incorrect', 'streak-bonus'); 
 
     try {
         const response = await fetch('quiz_data.csv');
@@ -81,13 +84,8 @@ async function fetchAndSetupQuiz() {
                 question: question ? question.trim() : '',
                 answer: (answer ? answer.trim().toLowerCase() === 'true' : false)
             };
-        }).filter(q => q.question); // Φιλτράρισμα κενών γραμμών
+        }).filter(q => q.question); 
         
-        if (allQuestions.length < NUMBER_OF_QUIZ_QUESTIONS && allQuestions.length > 0) {
-            console.warn(`Προσοχή: Βρέθηκαν μόνο ${allQuestions.length} ερωτήσεις.`);
-        }
-        
-        // Ανάμειξη όλων των ερωτήσεων και επιλογή
         const shuffledQuestions = shuffleArray(allQuestions);
         questions = shuffledQuestions.slice(0, NUMBER_OF_QUIZ_QUESTIONS);
         
@@ -95,7 +93,6 @@ async function fetchAndSetupQuiz() {
         if (questions.length > 0) {
             loadQuestion();
         } else {
-            // Αν δεν βρεθούν ερωτήσεις
              questionText.textContent = "ΣΦΑΛΜΑ: Δεν βρέθηκαν ερωτήσεις στο quiz_data.csv. Παρακαλώ ελέγξτε το αρχείο.";
              buttonsContainer.style.display = 'none';
         }
@@ -110,16 +107,22 @@ async function fetchAndSetupQuiz() {
 
 // --- ΛΟΓΙΚΗ QUIZ ---
 
-// Συνάρτηση για την ενημέρωση της εμφάνισης του σκορ
-function updateScoreDisplay() {
+// 🎯 ΝΕΟ: Συνάρτηση για την ενημέρωση του τρέχοντος αριθμού ερώτησης (όχι το σκορ)
+function updateQuestionNumberDisplay() {
     const totalQuestions = questions.length;
     
     if (totalQuestions === 0) {
-        scoreText.textContent = `Σκορ: 0 / 0`;
+        scoreText.textContent = ``; 
         return;
     }
     
-    scoreText.textContent = `Σκορ: ${score} / ${totalQuestions}`; 
+    // Εμφάνιση μόνο του αριθμού ερώτησης
+    if (currentQuestionIndex < totalQuestions) {
+        scoreText.textContent = `Ερώτηση ${currentQuestionIndex + 1} / ${totalQuestions}`; 
+    } else {
+        // Κρύψιμο/Καθαρισμός όταν τελειώσει το Quiz (Report screen)
+        scoreText.textContent = ''; 
+    }
 }
 
 // Συνάρτηση για την εμφάνιση της επόμενης ερώτησης
@@ -133,14 +136,14 @@ function loadQuestion() {
     trueBtn.classList.remove('selected');
     falseBtn.classList.remove('selected');
     
-    // 🛑 Κρύβουμε το footer σε κάθε νέα ερώτηση
+    // Κρύβουμε το footer
     document.getElementById('app-footer').style.display = 'none';
     // Επαναφορά κειμένου κουμπιού σε "Επόμενη Ερώτηση"
     nextBtn.textContent = 'Επόμενη Ερώτηση '; 
     
     if (currentQuestionIndex < questions.length) {
         questionText.textContent = questions[currentQuestionIndex].question;
-        buttonsContainer.style.display = 'flex'; // Βεβαιωνόμαστε ότι εμφανίζονται
+        buttonsContainer.style.display = 'flex'; 
 
     } else {
         // 🏁 Τέλος του κουίζ - Εμφάνιση Αναλυτικού Report
@@ -153,7 +156,6 @@ function loadQuestion() {
         // 1. Τίτλος & Σκορ
         questionText.textContent = `Η κατάταξή σου είναι: ${rank.emoji} ${rank.title}`;
         
-        // Καθαρισμός feedbackText από προηγούμενα στυλ
         feedbackText.classList.remove('correct', 'incorrect');
         
         let reportHTML = `
@@ -181,12 +183,10 @@ function loadQuestion() {
 
         reportHTML += '</ul>';
 
-        feedbackText.innerHTML = reportHTML; // Εμφάνιση του Report
+        feedbackText.innerHTML = reportHTML; 
 
-        // Επαναφορά του Log για νέο παιχνίδι
         answersLog = []; 
         
-        // 🌟 ΝΕΟ: Εμφάνιση του footer όταν ολοκληρώνεται το κουίζ
         document.getElementById('app-footer').style.display = 'block';
 
         // Εμφάνιση κουμπιού επανέναρξης και αλλαγή κειμένου
@@ -194,7 +194,8 @@ function loadQuestion() {
         nextBtn.textContent = 'Επανέναρξη 🔄'; 
     }
     
-    updateScoreDisplay(); 
+    // 🎯 Καλείται η ΝΕΑ συνάρτηση
+    updateQuestionNumberDisplay(); 
 }
 
 // Συνάρτηση για τον έλεγχο της απάντησης
@@ -203,18 +204,16 @@ function checkAnswer(userAnswer) {
 
     isAnswered = true;
     
-    // 💡 ΔΙΟΡΘΩΣΗ: Ορισμός μεταβλητών για το log
     const currentQuestion = questions[currentQuestionIndex]; 
     const correctAnswer = currentQuestion.answer;
     const isCorrect = userAnswer === correctAnswer;
     
     buttonsContainer.style.pointerEvents = 'none'; 
     
-    // Εύρεση και επισήμανση του επιλεγμένου κουμπιού
     const selectedButton = userAnswer ? trueBtn : falseBtn;
     selectedButton.classList.add('selected'); 
 
-    // 📝 Καταγραφή της απάντησης στο log
+    // Καταγραφή της απάντησης στο log
     answersLog.push({
         question: currentQuestion.question,
         correct: correctAnswer,
@@ -233,20 +232,51 @@ function checkAnswer(userAnswer) {
         
     }
 
-    updateScoreDisplay(); 
+    // 🎯 Καλείται η ΝΕΑ συνάρτηση (αν και δεν αλλάζει το κείμενο εδώ, είναι για ενημέρωση)
+    updateQuestionNumberDisplay(); 
     nextBtn.style.display = 'block'; 
 }
 
 // --- Χειριστές Γεγονότων (Event Listeners) ---
 
+// 1. Χειριστής για το κουμπί 'Έναρξη'
+startBtn.addEventListener('click', () => {
+    splashScreen.style.display = 'none'; 
+    quizContent.style.display = 'block'; 
+    
+    // Ξεκινάμε τη φόρτωση των δεδομένων και το quiz
+    fetchAndSetupQuiz(); 
+});
+
+// 2. Χειριστής για το κουμπί 'Έξοδος' (Αντικατάσταση περιεχομένου)
+exitBtn.addEventListener('click', () => {
+    const quizContainer = document.getElementById('quiz-container'); 
+    
+    if (quizContainer) {
+        quizContainer.innerHTML = '<h2>Αποσύνδεση Ολοκληρώθηκε</h2><p>Σας ευχαριστούμε που παίξατε. Μπορείτε να κλείσετε την καρτέλα.</p><p style="margin-top:20px; font-size:0.9em;"><a href="javascript:location.reload()">Επανεκκίνηση Εφαρμογής</a></p>';
+        quizContainer.style.textAlign = 'center';
+        quizContainer.style.padding = '50px';
+    } else {
+        alert('Η εφαρμογή ολοκληρώθηκε. Μπορείτε να κλείσετε την καρτέλα.');
+    }
+});
+
 trueBtn.addEventListener('click', () => checkAnswer(true));
 falseBtn.addEventListener('click', () => checkAnswer(false));
-
 nextBtn.addEventListener('click', () => {
     // Έλεγχος αν το κουμπί λειτουργεί ως "Επόμενη" ή "Επανέναρξη"
     if (nextBtn.textContent.includes('Επανέναρξη')) {
-        // Αν είναι το κουμπί επανέναρξης, καλούμε τη φόρτωση του κουίζ
-        fetchAndSetupQuiz();
+        
+        // ✅ ΔΙΟΡΘΩΣΗ: Επιστροφή στην αρχική οθόνη (Splash Screen)
+        splashScreen.style.display = 'block'; // Εμφάνιση αρχικής
+        quizContent.style.display = 'none';  // Απόκρυψη περιεχομένου Quiz (Report)
+        
+        // Επαναφορά του κειμένου του nextBtn για τον επόμενο γύρο
+        nextBtn.textContent = 'Επόμενη Ερώτηση '; 
+        
+        // Επαναφορά του footer στην αρχική οθόνη (Επειδή το κρύβουμε σε κάθε ερώτηση)
+        document.getElementById('app-footer').style.display = 'block';
+        
     } else {
         // Αλλιώς, προχωράμε στην επόμενη ερώτηση
         currentQuestionIndex++; 
@@ -254,5 +284,3 @@ nextBtn.addEventListener('click', () => {
     }
 });
 
-// Εκκίνηση: Φόρτωση των ερωτήσεων
-fetchAndSetupQuiz();

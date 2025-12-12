@@ -213,3 +213,53 @@ h1 {
     background-color: #ccc;
     margin: 20px 0;
 }
+/* ΝΕΑ ΣΤΥΛ ΓΙΑ ΤΗΝ ΑΡΧΙΚΗ ΟΘΟΝΗ (SPLASH SCREEN) */
+#splash-screen {
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+#splash-screen h1 {
+    color: #007bff;
+    margin-bottom: 15px;
+    font-size: 1.8em;
+}
+
+#splash-screen p {
+    margin-bottom: 25px;
+    line-height: 1.6;
+    font-size: 1.1em;
+}
+
+/* Κοινό στυλ για τα κουμπιά της αρχικής σελίδας */
+.main-btn {
+    padding: 12px 25px;
+    font-size: 1.1em;
+    margin: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+    font-weight: bold;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#start-btn {
+    background-color: #28a745; /* Πράσινο */
+    color: white;
+}
+
+#start-btn:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+#exit-btn {
+    background-color: #6c757d; /* Γκρι */
+    color: white;
+}
+
+#exit-btn:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+}
