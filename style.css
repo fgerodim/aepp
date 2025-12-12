@@ -46,15 +46,16 @@ h1 {
 
 /* Κουμπιά Απάντησης (Σωστό/Λάθος) */
 #buttons-container button {
-    padding: 12px 25px;
+    padding: 15px 30px;
     margin: 8px;
-    font-size: 1.1em; 
+    font-size: 1.2em; 
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s;
     font-weight: bold;
     min-width: 150px;
+    min-height: 55px;
 }
 
 #true-btn {
