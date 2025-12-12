@@ -264,3 +264,19 @@ h1 {
     background-color: #5a6268;
     transform: translateY(-2px);
 }
+#progress-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 10px;
+    margin-bottom: 20px; /* Κενό κάτω από τη μπάρα */
+    height: 12px;
+    overflow: hidden; /* Κρύβει το overflow της μπάρας */
+}
+
+#progress-bar {
+    height: 100%;
+    width: 0%; /* Ξεκινάει από το 0% */
+    background-color: #007bff; /* Μπλε χρώμα */
+    border-radius: 10px;
+    transition: width 0.5s ease-in-out; /* Ομαλή μετάβαση κατά την ενημέρωση */
+}

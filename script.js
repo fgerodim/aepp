@@ -6,6 +6,7 @@ const feedbackText = document.getElementById('feedback-text');
 const nextBtn = document.getElementById('next-btn');
 const buttonsContainer = document.getElementById('buttons-container');
 const scoreText = document.getElementById('score-text');
+const progressBar = document.getElementById('progress-bar');
 
 // ΣΤΑΘΕΡΕΣ ΓΙΑ ΤΗΝ ΑΡΧΙΚΗ ΣΕΛΙΔΑ
 const splashScreen = document.getElementById('splash-screen');
@@ -140,7 +141,11 @@ function loadQuestion() {
     document.getElementById('app-footer').style.display = 'none';
     // Επαναφορά κειμένου κουμπιού σε "Επόμενη Ερώτηση"
     nextBtn.textContent = 'Επόμενη Ερώτηση '; 
-    
+    if (questions.length > 0) {
+        // Υπολογισμός ποσοστού ολοκλήρωσης
+        const progressPercentage = (currentQuestionIndex / questions.length) * 100;
+        progressBar.style.width = `${progressPercentage}%`;
+    }
     if (currentQuestionIndex < questions.length) {
         questionText.textContent = questions[currentQuestionIndex].question;
         buttonsContainer.style.display = 'flex'; 
@@ -186,6 +191,7 @@ function loadQuestion() {
         feedbackText.innerHTML = reportHTML; 
 
         answersLog = []; 
+        progressBar.style.width = '100%';
         
         document.getElementById('app-footer').style.display = 'block';
 
