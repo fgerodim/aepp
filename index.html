@@ -37,40 +37,85 @@
   gtag('config', 'G-0NWXRRP8PH');
 </script>
 <body>
-    <div class="menu-container">
-        <h1>Ασκήσεις στο μάθημα ΑΕΠΠ</h1>
-        <p>Διάλεξε τον τύπο της άσκησης που θέλεις να λύσεις:</p>
-        
-        <div class="button-grid">
-            <a href="app2/index.html" class="menu-btn">
-                <span class="icon">🎴</span>
-                <span class="text">Αντιστοίχιση με Κάρτες</span>
-            </a>
-            
-            <a href="app1/index.html" class="menu-btn">
-                <span class="icon">📑</span>
-                <span class="text">Αντιστοίχιση με Λίστα</span>
-            </a>
-            <a href="app3/index.html" class="menu-btn">
-                <span class="icon">⚖️</span>
-                <span class="text">Σωστό ή Λάθος;</span>
-            </a>
-            <a href="app4/index.html" class="menu-btn new-app">
-                <span class="icon">🧠</span>
-                <span class="text">Ιχνηλάτηση Αλγορίθμου</span>
-            </a>
-            <a href="app5/index.html" class="menu-btn new-app">
-                <span class="icon">✏️</span>
-                <span class="text">Συμπλήρωσης Κενών</span>
-            </a>
-        </div>
-        <hr class="footer-line">
-<div class="footer">
-    <p class="creator">Δημιουργός: Φάνης Γεροδήμος-ΠΕ86</p>
-    <p class="contact">Επικοινωνία: <a href="mailto:fgerodim@gmail.com">fgerodim@gmail.com</a></p>
-    <p class="cookies">*Χρησιμοποιούνται ανώνυμα cookies ανάλυσης για τη μέτρηση επισκεψιμότητας.</p>
-</div>
-    </div>
-    
+
+<main class="menu-container">
+
+  <h1>Ασκήσεις στο μάθημα ΑΕΠΠ</h1>
+  <p>Διάλεξε τον τύπο της άσκησης που θέλεις να λύσεις:</p>
+
+  <section class="button-grid">
+    <a href="app2/index.html" class="menu-btn">🎴 Αντιστοίχιση με Κάρτες</a>
+    <a href="app1/index.html" class="menu-btn">📑 Αντιστοίχιση με Λίστα</a>
+    <a href="app3/index.html" class="menu-btn">⚖️ Σωστό ή Λάθος;</a>
+    <a href="app4/index.html" class="menu-btn new-app">🧠 Ιχνηλάτηση Αλγορίθμου</a>
+    <a href="app5/index.html" class="menu-btn new-app">✏️ Συμπλήρωση Κενών</a>
+  </section>
+
+  <!-- Θεωρία κουμπί -->
+  <section class="theory-divider">
+    <button class="theory-toggle" id="openTheoryBtn">📘 Θεωρία & Τυπολόγιο</button>
+  </section>
+
+  <hr class="footer-line">
+
+  <footer class="footer">
+    <p>Δημιουργός: Φάνης Γεροδήμος-ΠΕ86</p>
+    <p>Επικοινωνία: <a href="mailto:fgerodim@gmail.com">fgerodim@gmail.com</a></p>
+    <p class="cookies">* Ανώνυμα cookies ανάλυσης επισκεψιμότητας.</p>
+  </footer>
+
+</main>
+
+<!-- Overlay -->
+<div id="overlay" class="overlay"></div>
+
+<!-- Panel Θεωρίας -->
+<aside id="theoryPanel" class="theory-panel" aria-hidden="true">
+
+  <header class="theory-header">
+    <span>📘 Θεωρία & Τυπολόγιο</span>
+    <button id="closeTheoryBtn" aria-label="Κλείσιμο">✖</button>
+  </header>
+
+  <div class="theory-content">
+
+    <a href="theory/typologio.pdf" target="_blank" class="theory-link">🧮 Τυπολόγιο (PDF)</a>
+
+    <hr>
+
+    <!--strong>Θεωρία ανά κεφάλαιο</strong>
+
+    <a href="theory/kef1.pdf" target="_blank" class="theory-link">📄 Κεφάλαιο 1 – Αλγόριθμοι</a>
+    <a href="theory/kef2.pdf" target="_blank" class="theory-link">📄 Κεφάλαιο 2 – Επιλογή</a>
+    <a href="theory/kef3.pdf" target="_blank" class="theory-link">📄 Κεφάλαιο 3 – Επανάληψη</a>
+    <a href="theory/pinakes.pdf" target="_blank" class="theory-link">📄 Πίνακες</a-->
+
+  </div>
+
+</aside>
+
+<script>
+const panel = document.getElementById('theoryPanel');
+const overlay = document.getElementById('overlay');
+const openBtn = document.getElementById('openTheoryBtn');
+const closeBtn = document.getElementById('closeTheoryBtn');
+
+function openPanel() {
+  panel.classList.add('open');
+  overlay.classList.add('show');
+  panel.setAttribute('aria-hidden', 'false');
+}
+
+function closePanel() {
+  panel.classList.remove('open');
+  overlay.classList.remove('show');
+  panel.setAttribute('aria-hidden', 'true');
+}
+
+openBtn.addEventListener('click', openPanel);
+closeBtn.addEventListener('click', closePanel);
+overlay.addEventListener('click', closePanel);
+</script>
+
 </body>
 </html>
