@@ -1,6 +1,7 @@
 var exercises = [];
 var current = 0;
-var order = []; // Νέο: τυχαία σειρά indices
+var order = []; // Τυχαία σειρά indices
+var completedCount = 0; // Μετρητής για badges
 
 var titleEl = document.getElementById("title");
 var codeEl = document.getElementById("code");
@@ -8,6 +9,7 @@ var feedbackEl = document.getElementById("feedback");
 var progressEl = document.getElementById("progress");
 var checkBtn = document.getElementById("checkBtn");
 var nextBtn = document.getElementById("nextBtn");
+var badgeContainer = document.getElementById("badge-container");
 
 var solutionBox, scoreBox, navBox, homeBtn, restartBtn;
 
@@ -57,6 +59,7 @@ function loadData() {
             shuffle(order);
 
             current = 0;
+            completedCount = 0;
             render();
         }
     };
@@ -94,7 +97,7 @@ function normalizeText(str) {
 
 function parseCSV(text) {
     var lines = text.split(/\r?\n/);
-    lines.shift();
+    lines.shift(); // αφαίρεση header
 
     for (var i = 0; i < lines.length; i++) {
         if (lines[i].indexOf("|") === -1) continue;
@@ -111,8 +114,7 @@ function parseCSV(text) {
 
 function render() {
     if (current >= order.length) {
-        // Όλες οι ασκήσεις εμφανίστηκαν
-        titleEl.innerHTML = "Τέλος ασκήσεων!";
+        titleEl.innerHTML = "🎉 Τέλος ασκήσεων!";
         codeEl.innerHTML = "";
         feedbackEl.innerHTML = "";
         checkBtn.style.display = "none";
@@ -120,7 +122,7 @@ function render() {
         return;
     }
 
-    var ex = exercises[order[current]]; // Χρησιμοποιούμε το τυχαίο index
+    var ex = exercises[order[current]]; // Τυχαίο index
 
     titleEl.innerHTML = ex.title;
 
@@ -177,6 +179,12 @@ function checkAnswers() {
 
     checkBtn.style.display = "none";
     navBox.style.display = "block";
+
+    // Μετρητής για badge
+    completedCount++;
+    if (completedCount % 5 === 0) {
+        showBadge(completedCount / 5);
+    }
 }
 
 function showSolution() {
@@ -193,6 +201,49 @@ function showSolution() {
 function goNextExercise() {
     current++;
     render();
+}
+
+// ====== Badges ======
+var badgeTitles = ["Καλός Μαθητής. Συνέχισε έτσι!!!", "Ιδιοφυΐα. Τα πας τέλεια!!!", "Μάστερ Προγραμματισμού. Όσο παίζεις μαθαίνεις!!!", "Προφεσόρας!!!!", "Απόλυτος Προγραμματιστής!!!"];
+var badgeIcons = ["🎓", "🧠", "💻", "👨‍🏫", "🏆"];
+
+function showBadge(level) {
+    if (level > badgeTitles.length) level = badgeTitles.length;
+    var badge = document.createElement("div");
+    badge.className = "badge";
+    badge.style.background = "#ffeb3b";
+    badge.style.color = "#333";
+    badge.style.padding = "10px 15px";
+    badge.style.margin = "5px";
+    badge.style.borderRadius = "12px";
+    badge.style.fontWeight = "bold";
+    badge.style.fontSize = "1em";
+    badge.style.boxShadow = "0 4px 10px rgba(0,0,0,0.2)";
+    badge.style.opacity = "0";
+    badge.style.transform = "scale(0.5)";
+    badge.style.transition = "all 0.5s ease";
+
+    badge.innerHTML = badgeIcons[level - 1] + " " + badgeTitles[level - 1];
+
+    badgeContainer.appendChild(badge);
+
+    // Animation
+    setTimeout(() => {
+        badge.style.opacity = "1";
+        badge.style.transform = "scale(1)";
+    }, 50);
+
+    // Confetti
+    if (window.confetti) {
+        confetti({ particleCount: 200, spread: 100, origin: { y: 0.3 } });
+    }
+
+    // Αυτόματο fade out
+    setTimeout(() => {
+        badge.style.opacity = "0";
+        badge.style.transform = "scale(0.5)";
+        setTimeout(() => badge.remove(), 600);
+    }, 4000);
 }
 
 checkBtn.onclick = checkAnswers;

@@ -178,6 +178,19 @@ button:hover {
     color: #222;
     white-space: pre-wrap;
 }
+.badge {
+    background: #ffeb3b;
+    color: #333;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    font-size: 1.1em;
+    pointer-events: none;
+    position: relative;
+    display: inline-block;
+}
+
 
 /* ====== MOBILE RESPONSIVE ====== */
 @media (max-width: 600px) {
