@@ -1,5 +1,6 @@
 var exercises = [];
 var current = 0;
+var order = []; // Νέο: τυχαία σειρά indices
 
 var titleEl = document.getElementById("title");
 var codeEl = document.getElementById("code");
@@ -23,8 +24,7 @@ function createExtraUI() {
 
     homeBtn = document.createElement("button");
     homeBtn.innerHTML = "🏠 Επιστροφή";
-homeBtn.className = "menu-secondary";
-
+    homeBtn.className = "menu-secondary";
     homeBtn.onclick = function () {
         window.location.href = "../index.html";
     };
@@ -50,15 +50,32 @@ function loadData() {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             parseCSV(xhr.responseText);
+
+            // Δημιουργούμε τυχαία σειρά ασκήσεων
+            order = [];
+            for (let i = 0; i < exercises.length; i++) order.push(i);
+            shuffle(order);
+
+            current = 0;
+            render();
         }
     };
     xhr.send();
 }
+
+// Shuffle array: Fisher-Yates
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
 function normalizeText(str) {
     return str
         .trim()
         .toUpperCase()
-        // Ελληνικά → Λατινικά που μοιάζουν
         .replace(/Α/g, "A")
         .replace(/Β/g, "B")
         .replace(/Ε/g, "E")
@@ -90,14 +107,22 @@ function parseCSV(text) {
     }
 
     createExtraUI();
-    render();
 }
 
 function render() {
-    var ex = exercises[current];
+    if (current >= order.length) {
+        // Όλες οι ασκήσεις εμφανίστηκαν
+        titleEl.innerHTML = "Τέλος ασκήσεων!";
+        codeEl.innerHTML = "";
+        feedbackEl.innerHTML = "";
+        checkBtn.style.display = "none";
+        navBox.style.display = "none";
+        return;
+    }
+
+    var ex = exercises[order[current]]; // Χρησιμοποιούμε το τυχαίο index
 
     titleEl.innerHTML = ex.title;
-    //progressEl.innerHTML = "Άσκηση " + (current + 1) + " / " + exercises.length;
 
     feedbackEl.innerHTML = "";
     feedbackEl.className = "";
@@ -155,7 +180,7 @@ function checkAnswers() {
 }
 
 function showSolution() {
-    var ex = exercises[current];
+    var ex = exercises[order[current]];
 
     var solution = ex.code.replace(/%(.*?)%/g, function (_, ans) {
         return ans;
@@ -167,7 +192,6 @@ function showSolution() {
 
 function goNextExercise() {
     current++;
-    if (current >= exercises.length) current = 0;
     render();
 }
 
