@@ -54,6 +54,26 @@ function loadData() {
     };
     xhr.send();
 }
+function normalizeText(str) {
+    return str
+        .trim()
+        .toUpperCase()
+        // Ελληνικά → Λατινικά που μοιάζουν
+        .replace(/Α/g, "A")
+        .replace(/Β/g, "B")
+        .replace(/Ε/g, "E")
+        .replace(/Ζ/g, "Z")
+        .replace(/Η/g, "H")
+        .replace(/Ι/g, "I")
+        .replace(/Κ/g, "K")
+        .replace(/Μ/g, "M")
+        .replace(/Ν/g, "N")
+        .replace(/Ο/g, "O")
+        .replace(/Ρ/g, "P")
+        .replace(/Τ/g, "T")
+        .replace(/Υ/g, "Y")
+        .replace(/Χ/g, "X");
+}
 
 function parseCSV(text) {
     var lines = text.split(/\r?\n/);
@@ -104,7 +124,7 @@ function checkAnswers() {
         var inp = inputs[i];
         var ans = inp.getAttribute("data-answer");
 
-        if (inp.value.trim() === ans) {
+        if (normalizeText(inp.value) === normalizeText(ans)) {
             inp.className = "gap correct locked";
             correct++;
         } else {
